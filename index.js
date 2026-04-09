@@ -25,9 +25,14 @@ async function generateAudycja(prompt) {
 
   const data = await response.json();
 
-  return data.output_text 
-    || (data.output?.[0]?.content?.[0]?.text) 
-    || "❌ RNG FM: brak odpowiedzi z AI";
+const data = await response.json();
+
+console.log("AI RESPONSE:", JSON.stringify(data, null, 2));
+
+return data.output?.[0]?.content?.[0]?.text
+   data.output_text
+  
+ "❌ RNG FM: brak odpowiedzi z AI";
 }
 
 // ===== READY =====
