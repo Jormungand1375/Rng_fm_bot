@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 // 🔐 ENV (Railway)
 const TOKEN = process.env.TOKEN ;
 const OPENAI_API_KEY = process.env.OPENI_API_KEY;
-const CHANNEL_ID = process,env.CHANNEL_ID;
+const CHANNEL_ID = process.env.CHANNEL_ID;
 
 // ===== AI =====
 async function generateAudycja(prompt) {
