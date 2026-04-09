@@ -3,10 +3,11 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
-
+const fetch = (..args) =>
+import("node-fetch) . then (({default: fetch}) => fetch(...args));
 // 🔐 ENV (Railway)
 const TOKEN = process.env.TOKEN ;
-const OPENAI_API_KEY = process.env.OPEN_API_KEY;
+const OPENAI_API_KEY = process.env.OPENI_API_KEY;
 const CHANNEL_ID = process,env.CHANNEL_ID;
 
 // ===== AI =====
