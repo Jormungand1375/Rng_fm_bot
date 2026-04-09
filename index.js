@@ -120,6 +120,22 @@ Zawrzyj:
   lastRun = key;
 
 }, 60000);
+client.on("ready", async () => {
+  console.log("🔥 Bot działa!");
 
+  const channel = await client.channels.fetch(CHANNEL_ID);
+
+  setInterval(async () => {
+    try {
+      const prompt = "Twoja audycja testowa 🔥";
+
+      const text = await generateAudycja(prompt);
+
+      channel.send(text);
+    } catch (err) {
+      console.error("❌ Błąd:", err);
+    }
+  }, 60000); // co 60 sekund
+});
 // ===== START =====
 client.login(TOKEN);
