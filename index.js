@@ -72,7 +72,28 @@ client.on("clientReady", async () => {
     } else if (isWeekend) {
       prompt = "WEEKEND FUN RADIO";
     } else {
-      prompt = `NORMAL RADIO ${typ}`;
+      prompt = 
+RNG FM – audycja radiowa
+
+Typ: ${typ}
+
+Prowadzący:
+📻 Bjorn – poważny
+😏 Skald – ironiczny
+
+Zrób:
+- krótką audycję radiową
+- dialog między prowadzącymi
+- żart
+- prognoze dnia
+- pytanie do sLuchaczy
+
+Styl:
+luźny, śmieszny, radio DJ
+
+Format:
+gotowy tekst do wysłania na Discord
+;
     }
 
     const text = await generateAudycja(prompt);
