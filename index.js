@@ -1,146 +1,87 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
 });
 
-// 🔐 ENV (Railway)
-const TOKEN = process.env.TOKEN ;
-const OPENAI_API_KEY = process.env.OPENI_API_KEY;
+const TOKEN = process.env.TOKEN;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 
-// ===== AI =====
 async function generateAudycja(prompt) {
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-4.1-mini",
-      input: prompt
-    })
-  });
+  try {
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        input: prompt
+      })
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-const data = await response.json();
+    return data.output?.[0]?.content?.[0]?.text || "❌ Brak odpowiedzi AI";
 
-console.log("AI RESPONSE:", JSON.stringify(data, null, 2));
-
-return data.output?.[0]?.content?.[0]?.text
-   data.output_text
-  
- "❌ RNG FM: brak odpowiedzi z AI";
+  } catch (err) {
+    console.error(err);
+    return "❌ Błąd AI";
+  }
 }
 
-// ===== READY =====
-client.on("clientReady", () => {
-  console.log("🔥 RNG FM RADIO LIVE!");
-});
+function getAudycjaType(h, m) {
+  if (h === 8 && m === 0) return "poranek";
+  if (h === 12 && m === 30) return "środek dnia";
+  if (h === 19 && m === 0) return "wieczór";
+  if (h === 22 && m === 0) return "noc";
+  return null;
+}
 
-// ===== KOMENDA =====
-client.on("messageCreate", async (message) => {
-  if (!message.content.startsWith("!rng") || message.author.bot) return;
-
-  const args = message.content.split(" ").slice(1);
-  const godzina = args[0] || "??:??";
-  const vibe = args.slice(1).join(" ") || "chaos";
-
-  const prompt = `
-RNG FM – Bjornheim
-
-Godzina: ${godzina}
-Vibe: ${vibe}
-
-Styl:
-- radio samochodowe
-- Bjorn + Skald
-- humor
-
-Zawrzyj:
-- raport
-- prognozę dnia
-- prognozę dropa
-- kawę
-- suchar
-- pytanie
-`;
-
-  const text = await generateAudycja(prompt);
-  message.channel.send(text);
-});
-
-// ===== AUTO RADIO =====
-let lastRun = "";
-
-setInterval(async () => {
-  const now = new Date();
-  const godz = now.getHours();
-  const min = now.getMinutes();
-  const key = godz + ":" + min;
-
-  if (lastRun === key) return;
-
-  const channel = client.channels.cache.get(CHANNEL_ID);
-  if (!channel) return;
-
-  let typ = null;
-
-  if (godz === 8 && min === 0) typ = "poranek";
-  if (godz === 12 && min === 30) typ = "środek dnia";
-  if (godz === 19 && min === 0) typ = "luźne wejście";
-  if (godz === 22 && min === 0) typ = "noc";
-
-  if (!typ) return;
-
-  const godzinaText = now.toLocaleTimeString("pl-PL", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-
-  const prompt = `
-RNG FM – ${godzinaText}
-
-Typ audycji: ${typ}
-
-Styl:
-- radio samochodowe
-- Bjorn + Skald
-- humor
-
-Zawrzyj:
-- raport
-- prognozę dnia
-- prognozę dropa
-- kawę
-- suchar
-- pytanie
-`;
-
-  const text = await generateAudycja(prompt);
-  channel.send(text);
-
-  lastRun = key;
-
-}, 60000);
-client.on("ready", async () => {
-  console.log("🔥 Bot działa!");
+client.on("clientReady", async () => {
+  console.log("🔥 RNG FM LIVE");
 
   const channel = await client.channels.fetch(CHANNEL_ID);
+  let lastRun = "";
 
   setInterval(async () => {
-    try {
-      const prompt = "Twoja audycja testowa 🔥";
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const key = `${h}:${m}`;
 
-      const text = await generateAudycja(prompt);
+    if (lastRun === key) return;
 
-      channel.send(text);
-    } catch (err) {
-      console.error("❌ Błąd:", err);
+    const typ = getAudycjaType(h, m);
+    if (!typ) return;
+
+    const day = now.getDay();
+    const isWeekend = (day === 0 || day === 6);
+    const isNight = (h >= 22 || h < 3);
+
+    let prompt;
+
+    if (isWeekend && isNight) {
+      prompt = "WEEKEND NIGHT CHAOS RADIO";
+    } else if (isWeekend) {
+      prompt = "WEEKEND FUN RADIO";
+    } else {
+      prompt = `NORMAL RADIO ${typ}`;
     }
-  }, 60000); // co 60 sekund
+
+    const text = await generateAudycja(prompt);
+    await channel.send(text);
+
+    lastRun = key;
+
+  }, 60000);
 });
-// ===== START =====
+
 client.login(TOKEN);
+
