@@ -52,14 +52,14 @@ client.on("clientReady", async () => {
 
   setInterval(async () => {
     const now = new Date();
-    const h = now.getHours();
+    const h = now.getHours() + 2) %24;
     const m = now.getMinutes();
     const key = `${h}:${m}`;
 
     if (lastRun === key) return;
 
     const typ = getAudycjaType(h, m);
-    if (!typ) return;
+   // if (!typ) return;
 
     const day = now.getDay();
     const isWeekend = (day === 0 || day === 6);
