@@ -52,7 +52,7 @@ client.on("clientReady", async () => {
 
   setInterval(async () => {
     const now = new Date();
-    const h = now.getHours() + 2) %24;
+    const h = (now.getHours() + 2) %24;
     const m = now.getMinutes();
     const key = `${h}:${m}`;
 
