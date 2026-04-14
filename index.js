@@ -59,7 +59,7 @@ client.once("ready", async () => {
 
     if (key === last) return;
 
-    const show = getShow(h, m, d);
+    const show = "TEST RNG FM";
     if (!show) return;
 
     const prompt =
