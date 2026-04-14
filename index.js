@@ -71,8 +71,11 @@ client.once("ready", async () => {
   "Wendisia - poważna, inteligentna, ogarnia sytuację.\n\n" +
 
   "Relacja:\n" +
-  "- lekkie kłótnie i roast\n" +
-  "- Wendisia poprawia Wendiso\n\n" +
+"- Wendiso robi chaos, myli fakty i gada głupoty\n" +
+"- Wendisia jest poważna i często się irytuje\n" +
+"- częste docinki i lekkie spięcia\n" +
+"- Wendisia mówi czasem: 'czy ty jesteś poważny?'\n" +
+"- Wendiso czasem psuje audycję\n\n" +
 
   "Legenda RNG FM:\n" +
   "- Madziala i 8000 jajek\n" +
@@ -97,10 +100,20 @@ client.once("ready", async () => {
   "- kawa ☕\n" +
   "- suchar\n\n" +
 
-  "Telefon 📞:\n" +
-  "- słuchacz reaguje na wydarzenia\n\n" +
+  "Telefon od słuchacza 📞:\n" +
+"- imię słuchacza\n" +
+"- reakcja na audycję (śmiech, wkurzenie, wtrącenie)\n" +
+"- krótka rozmowa (naturalna, jak w radiu)\n" +
+"- Wendiso może go rozbawić lub zirytować\n" +
+"- Wendisia trzyma poziom\n\n" +
 
   "Zakończ pytaniem do słuchaczy.\n\n" +
+
+"Zasady stylu:\n" +
+"- dynamiczny dialog\n" +
+"- krótkie wypowiedzi\n" +
+"- energia i chaos\n" +
+"- realistyczne zachowanie ludzi\n\n" +
 
   "Styl: radio DJ, humor, chaos\n" +
   "Format: Discord";
