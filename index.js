@@ -1,4 +1,4 @@
- console.log("TOKEN:", process.env.TOKEN);
+
 
 const { Client, GatewayIntentBits } = require('discord.js');
 
@@ -54,6 +54,8 @@ client.once("ready", async () => {
 
   const channel = await client.channels.fetch(CHANNEL_ID);
   let last = "";
+
+console.log("CHANNEL:", channel?.id);
 
   setInterval(async () => {
     const { h, m, d } = getTime();
