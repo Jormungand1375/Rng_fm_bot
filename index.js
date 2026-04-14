@@ -78,7 +78,7 @@ client.once("ready", async () => {
 
   "LEGENDY TYGODNIA:\n" +
   "- nawiązuj do wydarzeń jakby trwały cały tydzień\n" +
-  "- możesz tworzyć nowe "legendy"\n\n" +
+  "- możesz tworzyć nowe 'legendy'\n\n" +
 
   "EVENT DNIA:\n" +
   "- jedno wydarzenie dnia\n\n" +
