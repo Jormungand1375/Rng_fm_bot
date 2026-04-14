@@ -63,10 +63,45 @@ client.once("ready", async () => {
     if (!show) return;
 
     const prompt =
-      "RNG FM " + show + "\n" +
-      "Bjorn i Skald prowadzą śmieszną audycję.\n" +
-      "Dodaj: żart, prognozę, drop %, kawę, telefon, pytanie.";
+       "RNG FM " + show + "\n" +
+  "Prowadzący:\n" +
+  "Wendiso - luźny DJ, robi chaos i żarty.\n" +
+  "Wendisia - poważna, inteligentna, ogarnia sytuację.\n\n" +
 
+  "Relacja:\n" +
+  "- lekkie kłótnie i roast\n" +
+  "- Wendisia poprawia Wendiso\n\n" +
+
+  "Legenda RNG FM:\n" +
+  "- Madziala i 8000 jajek\n" +
+  "- ktoś zawsze nie ma dropa\n\n" +
+
+  "LEGENDY TYGODNIA:\n" +
+  "- nawiązuj do wydarzeń jakby trwały cały tydzień\n" +
+  "- możesz tworzyć nowe "legendy"\n\n" +
+
+  "EVENT DNIA:\n" +
+  "- jedno wydarzenie dnia\n\n" +
+
+  "BREAKING NEWS (czasami):\n" +
+  "- nagłe wydarzenie 🚨\n\n" +
+
+  "Zrób audycję jako dialog:\n" +
+  "- rozpocznij jak radio\n" +
+  "- rozmowa\n" +
+  "- raport\n" +
+  "- prognoza\n" +
+  "- drop %\n" +
+  "- kawa ☕\n" +
+  "- suchar\n\n" +
+
+  "Telefon 📞:\n" +
+  "- słuchacz reaguje na wydarzenia\n\n" +
+
+  "Zakończ pytaniem do słuchaczy.\n\n" +
+
+  "Styl: radio DJ, humor, chaos\n" +
+  "Format: Discord";
     const text = await generate(prompt);
     channel.send(text);
 
