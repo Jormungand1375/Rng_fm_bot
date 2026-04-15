@@ -1,5 +1,3 @@
-
-
 const { Client, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
@@ -27,29 +25,12 @@ async function generate(prompt) {
     });
 
     const data = await res.json();
-
     return data.output?.[0]?.content?.[0]?.text || "Brak odpowiedzi AI";
 
   } catch (err) {
     console.error("API ERROR:", err);
     return "❌ API error";
   }
-}
-
-  const res = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-4.1-mini",
-      input: prompt
-    })
-  });
-
-  const data = await res.json();
-  return data.output?.[0]?.content?.[0]?.text || "Brak odpowiedzi AI";
 }
 
 function getTime() {
@@ -64,10 +45,10 @@ function getTime() {
 function getShow(h, m, d) {
   const weekend = (d === 0 || d === 6);
 
-  if (h === 8 && m <= 2) return "PORANEK";
-if (h === 12 && m <= 32) return "DZIEŃ";
-if (h === 19 && m <= 2) return "WIECZÓR";
-if (h === 22 && m <= 2) return weekend ? "CHAOS" : "NOC";
+  if (h === 8 && m < 10) return "PORANEK";
+  if (h === 12 && m < 40) return "DZIEŃ";
+  if (h === 19 && m < 10) return "WIECZÓR";
+  if (h === 22 && m < 10) return weekend ? "CHAOS" : "NOC";
 
   return null;
 }
@@ -76,79 +57,70 @@ client.once("clientReady", async () => {
   console.log("🔥 RNG FM FINAL LIVE");
 
   const channel = await client.channels.fetch(CHANNEL_ID);
-  let last = "";
+  let lastShow = "";
+  let lastMini = "";
 
-console.log("CHANNEL:", channel?.id);
+  console.log("CHANNEL:", channel?.id);
 
   setInterval(async () => {
     const { h, m, d } = getTime();
-    const key = h + ":" + m;
 
-    if (key === last) return;
+    // 🎙️ GŁÓWNA AUDYCJA
+    const show = getShow(h, m, d);
 
-const show = "NA ŻYWO 🔥 RNG FM";
-    if (!show) return;
+    if (show) {
+      const key = show + "-" + d;
+      if (key !== lastShow) {
 
-    const prompt =
-       "RNG FM " + show + "\n" +
-  "Prowadzący:\n" +
-  "Wendiso - luźny DJ, robi chaos i żarty.\n" +
-  "Wendisia - poważna, inteligentna, ogarnia sytuację.\n\n" +
+        const prompt =
+          "RNG FM " + show + "\n" +
+          "Prowadzący:\n" +
+          "Wendiso - luźny DJ, robi chaos i żarty.\n" +
+          "Wendisia - poważna, inteligentna, ogarnia sytuację.\n\n" +
 
-  "Relacja:\n" +
-"- Wendiso robi chaos, myli fakty i gada głupoty\n" +
-"- Wendisia jest poważna i często się irytuje\n" +
-"- częste docinki i lekkie spięcia\n" +
-"- Wendisia mówi czasem: 'czy ty jesteś poważny?'\n" +
-"- Wendiso czasem psuje audycję\n\n" +
+          "Relacja:\n" +
+          "- Wendiso robi chaos, myli fakty i gada głupoty\n" +
+          "- Wendisia jest poważna i często się irytuje\n" +
+          "- częste docinki i lekkie spięcia\n" +
+          "- Wendisia mówi czasem: 'czy ty jesteś poważny?'\n" +
+          "- Wendiso czasem psuje audycję\n\n" +
 
-  "Legenda RNG FM:\n" +
-  "- Madziala i 8000 jajek\n" +
-  "- ktoś zawsze nie ma dropa\n\n" +
+          "Legenda RNG FM:\n" +
+          "- Madziala i 8000 jajek\n" +
+          "- ktoś zawsze nie ma dropa\n\n" +
 
-  "LEGENDY TYGODNIA:\n" +
-  "- nawiązuj do wydarzeń jakby trwały cały tydzień\n" +
-  "- możesz tworzyć nowe 'legendy'\n\n" +
+          "Zrób audycję jako dialog + telefon od słuchacza.\n" +
+          "Zakończ pytaniem.\n\n" +
 
-  "EVENT DNIA:\n" +
-  "- jedno wydarzenie dnia\n\n" +
+          "Styl: naturalny, jak Discord, chaos i humor";
 
-  "BREAKING NEWS (czasami):\n" +
-  "- nagłe wydarzenie 🚨\n\n" +
+        const text = await generate(prompt);
+        channel.send(text);
 
-  "Zrób audycję jako dialog:\n" +
-  "- rozpocznij jak radio\n" +
-  "- rozmowa\n" +
-  "- raport\n" +
-  "- prognoza\n" +
-  "- drop %\n" +
-  "- kawa ☕\n" +
-  "- suchar\n\n" +
+        lastShow = key;
+      }
+    }
 
-  "Telefon od słuchacza 📞:\n" +
-"- imię słuchacza\n" +
-"- reakcja na audycję (śmiech, wkurzenie, wtrącenie)\n" +
-"- krótka rozmowa (naturalna, jak w radiu)\n" +
-"- Wendiso może go rozbawić lub zirytować\n" +
-"- Wendisia trzyma poziom\n\n" +
+    // 🔥 MINI WEJŚCIA CO 15 MIN
+    if (m % 15 === 0) {
+      const miniKey = h + ":" + m;
 
-  "Zakończ pytaniem do słuchaczy.\n\n" +
+      if (miniKey !== lastMini) {
+        const miniPrompt =
+          "RNG FM MINI WEJŚCIE\n" +
+          "Krótka rozmowa Wendiso i Wendisia (2-4 linijki):\n" +
+          "- chaos, żart albo szybki komentarz\n" +
+          "- może być mini roast albo reakcja\n" +
+          "- styl naturalny, jak Discord\n";
 
-"Zasady stylu:\n" +
-"- dynamiczny dialog\n" +
-"- krótkie wypowiedzi\n" +
-"- energia i chaos\n" +
-"- realistyczne zachowanie ludzi\n\n" +
+        const miniText = await generate(miniPrompt);
+        channel.send(miniText);
 
-  "Styl: radio DJ, humor, chaos\n" +
-  "Format: Discord";
-    const text = await generate(prompt);
-    channel.send(text);
-
-    last = key;
+        lastMini = miniKey;
+      }
+    }
 
   }, 60000);
 });
 
 client.login(TOKEN);
-
