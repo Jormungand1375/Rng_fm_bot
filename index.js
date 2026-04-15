@@ -42,13 +42,13 @@ function getTime() {
   };
 }
 
-function getShow(h, m, d) {
+function getShow(h, d) {
   const weekend = (d === 0 || d === 6);
 
-  if (h === 8 && m < 10) return "PORANEK";
-  if (h === 12 && m < 40) return "DZIEŃ";
-  if (h === 19 && m < 10) return "WIECZÓR";
-  if (h === 22 && m < 10) return weekend ? "CHAOS" : "NOC";
+  if (h >= 8 && h < 12) return "PORANEK";
+  if (h >= 12 && h < 19) return "DZIEŃ";
+  if (h >= 19 && h < 22) return "WIECZÓR";
+  if (h >= 22 || h < 8) return weekend ? "CHAOS" : "NOC";
 
   return null;
 }
@@ -66,7 +66,7 @@ client.once("clientReady", async () => {
     const { h, m, d } = getTime();
 
     // 🎙️ GŁÓWNA AUDYCJA
-    const show = getShow(h, m, d);
+    const show = getShow(h, d);
 
     if (show) {
       const key = show + "-" + d;
